@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include "utils/array/array.h"
+#include "./arrays/arrays.h"
 
 int main() {
+  testArrays();
   return 0;
 }
