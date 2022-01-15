@@ -16,12 +16,12 @@ static void compileIncDec(
     expressionCompile(target, ARCH_X86, src, true, out_stream);
 
     L("    pop     rax");
+    L("    %s     QWORD [rax]", dec ? "dec" : "inc");
     if (address) {
       L("    push    rax");
     } else {
       L("    push    QWORD [rax]");
     }
-    L("    %s     QWORD [rax]", dec ? "dec" : "inc");
 
     return;
   default:
@@ -35,18 +35,18 @@ static void compileIncDec(
   }
 }
 
-void compileOperationPostfixX86(char *src, ExpressionData *self, bool address, FILE *out_stream) {
+void compileOperationPrefixX86(char *src, ExpressionData *self, bool address, FILE *out_stream) {
   ExpressionData *target = (ExpressionData*) arrayAt(self->child_expressions, 0);
 
-  switch (self->id - EXPRESSION_OPERATIONS_POSTFIX) {
-  case OPERATION_POSTFIX_ID_INC:
+  switch (self->id - EXPRESSION_OPERATIONS_PREFIX) {
+  case OPERATION_PREFIX_ID_INC:
     compileIncDec(src, self, target, false, address, out_stream);
     return;
-  case OPERATION_POSTFIX_ID_DEC:
+  case OPERATION_PREFIX_ID_DEC:
     compileIncDec(src, self, target, true, address, out_stream);
     return;
   
   default:
-    throwSourceError(src, "this postfix expression is not supported yet", self->token);
+    throwSourceError(src, "this prefix expression is not supported yet", self->token);
   }
 }
